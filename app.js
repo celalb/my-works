@@ -25,6 +25,25 @@ const readTodos = () => {
 
 let todos = readTodos();
 
+let lastTimestamp = 0;
+let sameMsCounter = 0;
+
+const createId = () => {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+
+  const now = Date.now();
+  if (now === lastTimestamp) {
+    sameMsCounter += 1;
+  } else {
+    lastTimestamp = now;
+    sameMsCounter = 0;
+  }
+
+  return `${now}-${sameMsCounter}`;
+};
+
 const saveTodos = () => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
 };
@@ -85,10 +104,7 @@ todoForm.addEventListener("submit", (event) => {
   if (!text) return;
 
   todos.unshift({
-    id:
-      typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
-        ? crypto.randomUUID()
-        : `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+    id: createId(),
     text,
     completed: false,
   });

@@ -73,10 +73,12 @@ const createTodoElement = (todo) => {
   const checkbox = document.createElement("input");
   checkbox.type = "checkbox";
   checkbox.checked = todo.completed;
+  checkbox.id = `todo-checkbox-${todo.id}`;
   checkbox.setAttribute("aria-label", `Toggle ${todo.text}`);
   checkbox.addEventListener("change", () => toggleTodo(todo.id));
 
   const label = document.createElement("label");
+  label.htmlFor = checkbox.id;
   label.textContent = todo.text;
 
   const deleteButton = document.createElement("button");
@@ -91,7 +93,7 @@ const createTodoElement = (todo) => {
 };
 
 const renderTodos = () => {
-  todoList.innerHTML = "";
+  todoList.replaceChildren();
   todos.forEach((todo) => {
     todoList.append(createTodoElement(todo));
   });
